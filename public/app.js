@@ -31,7 +31,9 @@ function render(item) {
 
 async function loadPublications() {
   if (!config.supabaseUrl) throw new Error("The Supabase URL is not configured.");
-  const headers = config.supabaseAnonKey ? { apikey: config.supabaseAnonKey } : {};
+  const headers = config.supabaseAnonKey
+    ? { apikey: config.supabaseAnonKey, Authorization: `Bearer ${config.supabaseAnonKey}` }
+    : {};
   const query = new URL(
     `${config.supabaseUrl}/rest/v1/publications?select=publication_date,headline,summary,image_path&status=eq.complete&order=publication_date.desc`
   );
