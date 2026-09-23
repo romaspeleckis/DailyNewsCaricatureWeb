@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Daily news caricatures with summaries">
+    <title>Daily News Caricature</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="page-shell">
+      <header>
+        <p class="eyebrow">Daily News Caricature</p>
+        <h1>One picture. One story.</h1>
+        <p class="intro">Browse the editorial caricature and news summary for each published date.</p>
+      </header>
+
+      <section class="controls" aria-label="Publication selector">
+        <label for="date-select">Publication date</label>
+        <select id="date-select" disabled>
+          <option>Loading dates…</option>
+        </select>
+      </section>
+
+      <p id="status" class="status" role="status">Loading publications…</p>
+
+      <article id="publication" class="publication" hidden>
+        <div class="image-frame">
+          <img id="image" alt="">
+        </div>
+        <div class="copy">
+          <time id="date"></time>
+          <h2 id="headline"></h2>
+          <p id="summary"></p>
+        </div>
+      </article>
+    </main>
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

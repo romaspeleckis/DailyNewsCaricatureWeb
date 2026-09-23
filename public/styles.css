@@ -1,0 +1,27 @@
+:root {
+  color-scheme: light;
+  font-family: Georgia, "Times New Roman", serif;
+  background: #f3eee5;
+  color: #201d1a;
+}
+
+body { margin: 0; }
+.page-shell { max-width: 980px; margin: 0 auto; padding: 3rem 1.25rem 5rem; }
+.eyebrow { color: #a2462d; font: 700 .8rem/1.2 system-ui, sans-serif; letter-spacing: .14em; text-transform: uppercase; }
+h1 { max-width: 620px; margin: .35rem 0 1rem; font-size: clamp(2.7rem, 8vw, 5.8rem); line-height: .95; }
+.intro { max-width: 560px; font-size: 1.2rem; line-height: 1.5; }
+.controls { display: flex; align-items: center; gap: 1rem; margin: 2.5rem 0 1rem; font: 700 1rem system-ui, sans-serif; }
+select { min-width: 170px; padding: .7rem .8rem; border: 2px solid #201d1a; border-radius: 4px; background: #fffaf2; font: inherit; }
+.status { min-height: 1.5rem; color: #665d54; font: .9rem system-ui, sans-serif; }
+.status.error { color: #a2462d; }
+.publication { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(260px, .65fr); gap: 2rem; align-items: start; margin-top: 1.5rem; }
+.image-frame { overflow: hidden; background: #ddd2c3; box-shadow: 12px 12px 0 #d4b29f; }
+img { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; }
+.copy { padding-top: 1rem; }
+time { color: #a2462d; font: 700 .9rem system-ui, sans-serif; }
+h2 { margin: .7rem 0 1rem; font-size: clamp(1.7rem, 4vw, 2.8rem); line-height: 1.05; }
+.copy p { font-size: 1.15rem; line-height: 1.65; }
+@media (max-width: 700px) {
+  .publication { grid-template-columns: 1fr; }
+  .copy { padding-top: 0; }
+}

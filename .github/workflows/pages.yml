@@ -1,0 +1,50 @@
+name: Deploy public caricature page
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "public/**"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure public Supabase client
+        env:
+          SUPABASE_ANON_KEY: ${{ vars.SUPABASE_ANON_KEY }}
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          path = Path("public/config.js")
+          config = {
+              "supabaseUrl": "https://yvqagiccmnslfcodoapa.supabase.co",
+              "supabaseAnonKey": __import__("os").environ.get("SUPABASE_ANON_KEY", ""),
+              "imageBucket": "caricatures",
+          }
+          path.write_text("window.DAILY_NEWS_CONFIG = " + json.dumps(config) + ";\n")
+          PY
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+      - id: deployment
+        uses: actions/deploy-pages@v4
