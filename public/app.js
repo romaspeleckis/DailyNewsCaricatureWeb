@@ -6,6 +6,9 @@ const image = document.querySelector("#image");
 const date = document.querySelector("#date");
 const headline = document.querySelector("#headline");
 const summary = document.querySelector("#summary");
+const statsLink = document.querySelector("#stats-summary");
+const statsCache = {};
+const fmt = new Intl.NumberFormat("en");
 
 function setStatus(message, isError = false) {
   status.textContent = message;
@@ -27,13 +30,43 @@ function render(item) {
   image.src = imageUrl(item.image_path);
   image.alt = `${item.headline} caricature`;
   publication.hidden = false;
+  loadStats(item.publication_date);
+}
+
+function supabaseHeaders() {
+  return config.supabaseAnonKey
+    ? { apikey: config.supabaseAnonKey, Authorization: `Bearer ${config.supabaseAnonKey}` }
+    : {};
+}
+
+async function loadStats(day) {
+  statsLink.hidden = true;
+  try {
+    if (!statsCache[day]) {
+      const response = await fetch(
+        `${config.supabaseUrl}/rest/v1/social_stats?select=platform,views,likes,reposts,replies&publication_date=eq.${day}`,
+        { headers: supabaseHeaders() }
+      );
+      statsCache[day] = response.ok ? await response.json() : [];
+    }
+    const rows = statsCache[day];
+    if (!rows.length || date.dateTime !== day) return;
+    const total = { views: 0, likes: 0, reposts: 0, replies: 0 };
+    for (const row of rows) for (const key of Object.keys(total)) total[key] += row[key] || 0;
+    statsLink.href = `stats.html#${day}`;
+    statsLink.textContent =
+      `\u{1F441} ${fmt.format(total.views)} views \u00b7 \u2665 ${fmt.format(total.likes)} likes \u00b7 ` +
+      `\u21BB ${fmt.format(total.reposts)} shares \u00b7 \u{1F4AC} ${fmt.format(total.replies)} comments` +
+      ` on ${rows.length} network${rows.length === 1 ? "" : "s"} \u2014 detailed stats \u2192`;
+    statsLink.hidden = false;
+  } catch {
+    statsLink.hidden = true;
+  }
 }
 
 async function loadPublications() {
   if (!config.supabaseUrl) throw new Error("The Supabase URL is not configured.");
-  const headers = config.supabaseAnonKey
-    ? { apikey: config.supabaseAnonKey, Authorization: `Bearer ${config.supabaseAnonKey}` }
-    : {};
+  const headers = supabaseHeaders();
   const query = new URL(
     `${config.supabaseUrl}/rest/v1/publications?select=publication_date,headline,summary,image_path&status=eq.complete&order=publication_date.desc`
   );
