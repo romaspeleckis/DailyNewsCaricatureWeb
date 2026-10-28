@@ -21,6 +21,9 @@ img { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: co
 time { color: #a2462d; font: 700 .9rem system-ui, sans-serif; }
 h2 { margin: .7rem 0 1rem; font-size: clamp(1.7rem, 4vw, 2.8rem); line-height: 1.05; }
 .copy p { font-size: 1.15rem; line-height: 1.65; }
+.stats-summary { display: inline-block; margin-top: .5rem; padding: .7rem .9rem; border: 2px solid #201d1a; background: #fffaf2; box-shadow: 4px 4px 0 #d4b29f; color: #201d1a; font: 600 .9rem/1.5 system-ui, sans-serif; text-decoration: none; }
+.stats-summary:hover { background: #fde9c9; }
+.stats-summary[hidden] { display: none; }
 @media (max-width: 700px) {
   .publication { grid-template-columns: 1fr; }
   .copy { padding-top: 0; }
