@@ -65,6 +65,8 @@ async function load() {
 
   const rows = [...byDay.keys()].sort().reverse().map((day) => {
     const tr = document.createElement("tr");
+    tr.id = day;
+    if (location.hash === `#${day}`) tr.className = "highlight";
     const d = document.createElement("td");
     d.className = "day";
     d.textContent = day;
@@ -76,6 +78,7 @@ async function load() {
   });
   table.tBodies[0].replaceChildren(...rows);
   table.hidden = false;
+  document.querySelector("tr.highlight")?.scrollIntoView({ block: "center" });
   const latest = stats.reduce((a, s) => (s.updated_at > a ? s.updated_at : a), "");
   setStatus(`Last updated ${new Date(latest).toLocaleString()}`);
 }
