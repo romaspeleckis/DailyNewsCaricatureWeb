@@ -3,6 +3,21 @@ const PLATFORMS = ["youtube", "instagram", "bluesky", "mastodon"];
 const status = document.querySelector("#status");
 const table = document.querySelector("#stats");
 const fmt = new Intl.NumberFormat("en");
+const NAMES = { youtube: "YouTube", instagram: "Instagram", threads: "Threads", bluesky: "Bluesky", mastodon: "Mastodon" };
+const SITES = { youtube: "youtube.com", instagram: "instagram.com", threads: "threads.com", bluesky: "bsky.app", mastodon: "joinmastodon.org" };
+
+// Each network is shown by its own published site icon (favicon).
+function icon(platform, postUrl) {
+  let site = SITES[platform] || `${platform}.com`;
+  try { if (postUrl) site = new URL(postUrl).host; } catch {}
+  const img = document.createElement("img");
+  img.src = `https://www.google.com/s2/favicons?sz=64&domain=${encodeURIComponent(site)}`;
+  img.alt = NAMES[platform] || platform;
+  img.title = NAMES[platform] || platform;
+  img.width = img.height = 22;
+  img.className = "net-icon";
+  return img;
+}
 
 function setStatus(message, isError = false) {
   status.textContent = message;
@@ -36,8 +51,10 @@ function cell(stat) {
     a.href = stat.post_url;
     a.target = "_blank";
     a.rel = "noopener";
-    a.textContent = text;
-    td.append(a);
+    a.className = "net-link";
+    a.setAttribute("aria-label", `Open the post on ${NAMES[stat.platform] || stat.platform}`);
+    a.append(icon(stat.platform, stat.post_url));
+    td.append(a, " ", text);
   } else {
     td.textContent = text;
   }
@@ -76,6 +93,7 @@ async function load() {
     tr.append(d, h, ...PLATFORMS.map((p) => cell(byDay.get(day)[p])));
     return tr;
   });
+  [...table.tHead.rows[0].cells].slice(2).forEach((th, i) => th.replaceChildren(icon(PLATFORMS[i])));
   table.tBodies[0].replaceChildren(...rows);
   table.hidden = false;
   document.querySelector("tr.highlight")?.scrollIntoView({ block: "center" });
