@@ -1,5 +1,5 @@
 const config = window.DAILY_NEWS_CONFIG || {};
-const PLATFORMS = ["youtube", "instagram", "bluesky", "mastodon"];
+const PLATFORMS = ["youtube", "instagram", "threads", "bluesky", "mastodon"];
 const status = document.querySelector("#status");
 const table = document.querySelector("#stats");
 const fmt = new Intl.NumberFormat("en");
